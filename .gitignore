@@ -1,0 +1,6 @@
+.DS_Store
+.idea/
+config.yml
+error
+item_urls
+jd/test.py
