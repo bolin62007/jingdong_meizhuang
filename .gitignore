@@ -4,3 +4,5 @@ config.yml
 error
 item_urls
 jd/test.py
+items
+loaded_urls

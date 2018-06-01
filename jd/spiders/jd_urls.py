@@ -5,13 +5,13 @@ from scrapy.spidermiddlewares.httperror import HttpError
 import re
 
 """
-jd_url.py 用来获得所有美妆/个护下item页的url，
+jd_urls.py 用来获得所有美妆/个护下item页的url，
 init_urls里存的是美妆/个护下共9个二级类的list页url
 
 """
 
 class DianpingSpider(scrapy.Spider):
-    name = 'jd_url'
+    name = 'jd_urls'
 
     def __init__(self):
         self.count1 = 0
@@ -51,7 +51,7 @@ class DianpingSpider(scrapy.Spider):
                     url = 'https://item.jd.hk/%s.html' % sku_id
                 else:
                     self.count2 += 1
-                    url = 'https://item.jd.com/%s.html'%sku_id
+                    url = 'https://item.jd.com/%s.html' % sku_id
                 with open('/Users/conghua/jd/item_urls', 'a') as file:
                     file.write(url)
                     file.write('\n')

@@ -24,7 +24,7 @@ ROBOTSTXT_OBEY = False
 DOWNLOADE_TIMEOUT = 20
 CONCURRENT_REQUESTS = 20
 
-LOG_LEVEL = 'WARNING'
+# LOG_LEVEL = 'WARNING'
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
@@ -63,8 +63,8 @@ DOWNLOADER_MIDDLEWARES = {
     'jd.middlewares.ProxyMiddleware': 999
 }
 
-RETRY_HTTP_CODES = [403,503,429]
-RETRY_TIMES = 10
+RETRY_HTTP_CODES = [302]
+RETRY_TIMES = 3
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
