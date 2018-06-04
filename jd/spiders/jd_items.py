@@ -61,6 +61,8 @@ class DianpingSpider(scrapy.Spider):
             res.append('普通')
             score_soup = str(soup.find('div', class_='m m-aside popbox'))
             score1 = re.findall('(?<=number down">)[^<]*', score_soup)
+            if not score1:
+                score1 = re.findall('(?<=number up">)[^<]*', score_soup)
             score1 = score1+['']*(1-len(score1))
             res += list(map(lambda x:x.replace('-',''),score1))
             score2 = re.findall('(?<=title=")[^"|分]*', score_soup)[2:]
@@ -115,7 +117,7 @@ class DianpingSpider(scrapy.Spider):
             category = demjson.decode(re.findall('(?<=catName: )\[[^\[\]]*\]', category_soup)[0])
             res += category + [''] * (3 - len(category))
             name_soup = str(soup.find('div', class_='sku-name'))
-            name = re.findall('(?<=</span>)[^<>]*(?=</div>)', name_soup)
+            name = re.findall('(?<=>)[^<>]*(?=</div>)', name_soup)
             name = list(map(lambda x: x.strip(), name))
             res += name + [''] * (1 - len(name))
             shop_name_soup = soup.find('div', class_='shopName')

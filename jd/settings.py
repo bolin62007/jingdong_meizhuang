@@ -26,7 +26,7 @@ CONCURRENT_REQUESTS = 20
 RETRY_HTTP_CODES = [302]
 # LOG_LEVEL = 'WARNING'
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 64
+CONCURRENT_REQUESTS = 128
 REDIRECT_ENABLED = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
