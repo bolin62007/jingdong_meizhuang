@@ -10,11 +10,12 @@ import base64
 
 class ProxyMiddleware(object):
     def process_request(self, request, spider):
-        with open('/Users/conghua/jd/config.yml','r') as file:
-            t = file.readlines()[0][7:]
-        request.meta['proxy'] = 'http://http-dyn.abuyun.com:9020'
-        token = base64.b64encode(t.encode()).decode()
-        request.headers['Proxy-Authorization'] = 'Basic ' + token
+        # with open('/Users/conghua/jd/config.yml','r') as file:
+        #     t = file.readlines()[0][7:]
+        # request.meta['proxy'] = 'http://http-dyn.abuyun.com:9020'
+        # token = base64.b64encode(t.encode()).decode()
+        # request.headers['Proxy-Authorization'] = 'Basic ' + token
+        pass
 
 class CaspianSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,

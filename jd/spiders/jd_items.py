@@ -7,7 +7,8 @@ import demjson
 from scrapy.spidermiddlewares.httperror import HttpError
 
 """
-
+jd_items爬取了除价格和评论数以外的所有信息，全球购和普通国内商品页面的解析分别在parse_item_glocal和parse_item_normal里
+当页面出现商品选项里有多个sku时，添加到request
 """
 
 class DianpingSpider(scrapy.Spider):
@@ -31,6 +32,10 @@ class DianpingSpider(scrapy.Spider):
 
     def parse_item_normal(self, response):
         try:
+            if str(response.status) == '302':
+                print('302 302')
+            if 'product' in response.url or 'www.jd.com' in response.url:
+                raise AttributeError
             self.count += 1
             if self.count %10 == 0:
                 print(self.count)
@@ -56,9 +61,11 @@ class DianpingSpider(scrapy.Spider):
             res.append('普通')
             score_soup = str(soup.find('div', class_='m m-aside popbox'))
             score1 = re.findall('(?<=number down">)[^<]*', score_soup)
-            res += score1+['']*(1-len(score1))
+            score1 = score1+['']*(1-len(score1))
+            res += list(map(lambda x:x.replace('-',''),score1))
             score2 = re.findall('(?<=title=")[^"|分]*', score_soup)[2:]
-            res += score2+['']*(3-len(score2))
+            score2 = score2+['']*(3-len(score2))
+            res += list(map(lambda x:x.replace('-',''),score2))
             detail_soup = soup.find('ul', class_='parameter2 p-parameter-list')
             detail = []
             for child in detail_soup.contents:
@@ -94,6 +101,10 @@ class DianpingSpider(scrapy.Spider):
 
     def parse_item_global(self, response):
         try:
+            if str(response.status) == '302':
+                print('302 302')
+            if 'product' in response.url or 'www.jd.com' in response.url:
+                raise AttributeError
             self.count += 1
             if self.count % 10 == 0:
                 print(self.count)
@@ -117,7 +128,8 @@ class DianpingSpider(scrapy.Spider):
             score1 = ['']
             res += score1
             score2 = re.findall('(?<=title=").*(?=分)', score_soup)
-            res += score2 + [''] * (3 - len(score2))
+            score2 += [''] * (3 - len(score2))
+            res += list(map(lambda x: x.replace('-----', ''), score2))
             detail_soup = soup.find('ul', class_='parameter2')
             detail = []
             for child in detail_soup.contents:
@@ -140,16 +152,15 @@ class DianpingSpider(scrapy.Spider):
                 url = 'https://item.jd.hk/%s.html' % sku
                 if url not in self.urls:
                     self.urls.add(url)
-                    yield scrapy.Request(url, meta={'url': url},callback=self.parse_item_normal, errback=self.errorback,dont_filter=True)
-        except (AttributeError, IndexError) as e:
+                    yield scrapy.Request(url, meta={'url': url},callback=self.parse_item_global, errback=self.errorback,dont_filter=True)
+        except (AttributeError, IndexError) as e:       # 可能因为重定向（http302）导致找不到字段，在这里重发request就好了
             with open('/Users/conghua/jd/error', 'a') as file:
                 file.write(str(response.meta['url']) + ' ' + str(type(e)) + str(e) + '\n')
             yield scrapy.Request(response.meta['url'], meta={'url': response.meta['url']},
-                                 callback=self.parse_item_normal, errback=self.errorback, dont_filter=True)
+                                 callback=self.parse_item_global, errback=self.errorback, dont_filter=True)
         except Exception as e:
             with open('/Users/conghua/jd/error', 'a') as file:
-                file.write(str(e))
-                file.write('\n'+response.meta['url']+'\n')
+                file.write(str(response.meta['url'])+' '+str(e)+'\n')
 
     def errorback(self,failure):
         with open('/Users/conghua/jd/error', 'a') as file:
