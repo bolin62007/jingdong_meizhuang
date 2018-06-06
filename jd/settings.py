@@ -24,6 +24,7 @@ ROBOTSTXT_OBEY = False
 DOWNLOADE_TIMEOUT = 20
 CONCURRENT_REQUESTS = 20
 RETRY_HTTP_CODES = [302]
+RETRY_TIMES = 1
 # LOG_LEVEL = 'WARNING'
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 128
